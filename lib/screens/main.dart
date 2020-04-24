@@ -1,63 +1,53 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:random_color/random_color.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {// [context] будет описан позже
+  Widget build(BuildContext context) {
     return MaterialApp(
-      home: RandomWords(),
+      debugShowCheckedModeBanner: false,
+      home: RandomColors(),
     );
   }
 }
 
-class RandomWordsState extends State<RandomWords> {
-  Random random = new Random();
-  int _red = 255;
-  int _blue = 255;
-  int _green = 255;
-  int _opaque = 255;
-  int _red_negative = 0;
-  int _blue_negative = 0;
-  int _green_negative = 0;
+class RandomColorState extends State<RandomColors> {
+  RandomColor _randomColor = RandomColor();
+  Color _color;
+  MyColor _myColor;
+
+  @override
+  void initState() {
+    _color = _randomColor.randomColor();
+    _myColor = getColorNameFromColor(_color);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap:() {
-          setState(() {
-            _red = random.nextInt(255);
-            _blue = random.nextInt(255);
-            _green = random.nextInt(255);
-            _opaque = random.nextInt(255);
-            _red_negative = 255 - _red;
-            _blue_negative = 255 - _blue;
-            _green_negative = 255 - _green;
-          });
-        },
-        child: Scaffold(
-          body: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(_opaque, _red_negative, _blue_negative, _green_negative),
-              ),
-              child: Text(
-                'Hey there',
-                style: TextStyle(
-                    color: Color.fromARGB(_opaque, _red, _green, _blue)
-                ),
-              )
+      child: Scaffold(
+        body: Container(
+          color: _color,
+          child: Center(
+            child: Text(
+              'Hey there ${_myColor.getName.toLowerCase()} color',
             ),
           ),
-          backgroundColor: Color.fromARGB(_opaque, _red, _green, _blue),
         ),
+      ),
+      onTap: () {
+        setState(() {
+          _color = _randomColor.randomColor();
+          _myColor = getColorNameFromColor(_color);
+        });
+      },
     );
   }
 }
 
-class RandomWords extends StatefulWidget {
+class RandomColors extends StatefulWidget {
   @override
-  RandomWordsState createState() => RandomWordsState();
+  RandomColorState createState() => RandomColorState();
 }
